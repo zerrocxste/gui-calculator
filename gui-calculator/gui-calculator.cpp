@@ -102,8 +102,13 @@ void RenderCallback()
 	input_width += io.DisplaySize.x / 4.f - 13.f;
 	ImGui::PushItemWidth(input_width);
 	if (ImGui::IsRootWindowOrAnyChildFocused() && !ImGui::IsAnyItemActive() && !ImGui::IsMouseClicked(0))
-		ImGui::SetKeyboardFocusHere(-1);
-	ImGui::InputText("##input_block", expression, 256, ImGuiInputTextFlags_CharsDecimal);
+		ImGui::SetKeyboardFocusHere(0);
+	auto InputTextCallback = [](ImGuiTextEditCallbackData* data) -> int
+	{
+		data->CursorPos = strlen(expression);
+		return 0;
+	};
+	ImGui::InputText("##input_block", expression, 256, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_CallbackAlways, InputTextCallback);
 	ImGui::PopItemWidth();
 	ImGui::SameLine();
 	if (ImGui::Button("C", ImVec2(io.DisplaySize.x / 4.f - 5.f, 34.f))) {
