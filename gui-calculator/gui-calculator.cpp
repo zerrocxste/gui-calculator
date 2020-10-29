@@ -103,9 +103,14 @@ void RenderCallback()
 	ImGui::PushItemWidth(input_width);
 	if (ImGui::IsRootWindowOrAnyChildFocused() && !ImGui::IsAnyItemActive() && !ImGui::IsMouseClicked(0))
 		ImGui::SetKeyboardFocusHere(0);
+	static bool is_button_clicked = false;
 	auto InputTextCallback = [](ImGuiTextEditCallbackData* data) -> int
 	{
-		data->CursorPos = strlen(expression);
+		if (is_button_clicked)
+		{
+			data->CursorPos = strlen(expression);
+			is_button_clicked = false;
+		}		
 		return 0;
 	};
 	ImGui::InputText("##input_block", expression, 256, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_CallbackAlways, InputTextCallback);
@@ -176,6 +181,7 @@ void RenderCallback()
 
 		if (ImGui::Button(button, ImVec2((io.DisplaySize.x / 4.f) - 5.6f, button_height)))
 		{
+			is_button_clicked = true;
 			static bool negate = false;
 			if (button == "AC")
 			{
