@@ -20,7 +20,7 @@ void ResetCallback();
 
 LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
 
-int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR, int)
+int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int)
 {
 	/*AllocConsole();
 	freopen("CONOUT$", "w", stdout);*/
@@ -37,7 +37,7 @@ int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR, int)
 	GetWindowRect(GetDesktopWindow(), &screen_rect);
 	int x = screen_rect.right / 2 - WindowSize.x / 2;
 	int y = screen_rect.bottom / 2 - WindowSize.y / 2;
-	if (DXWFCreateWindow("calculator",
+	if (DXWFCreateWindow("Calculator",
 		x, y,
 		WindowSize.x, WindowSize.y,
 		WS_OVERLAPPEDWINDOW,
@@ -110,7 +110,7 @@ void RenderCallback()
 		{
 			data->CursorPos = strlen(expression);
 			is_button_clicked = false;
-		}		
+		}
 		return 0;
 	};
 	ImGui::InputText("##input_block", expression, 256, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_CallbackAlways, InputTextCallback);
@@ -139,7 +139,7 @@ void RenderCallback()
 			|| button == "2" || button == "1" || button == "+"
 			|| button == "0" || button == "+/-" || button == "=") ImGui::SameLine();
 
-		auto calculte = []() -> void
+		auto calculate = []() -> void
 		{
 			calculator->setup(std::string(expression));
 			calculator->compute();
@@ -173,7 +173,7 @@ void RenderCallback()
 		{
 			if (!pressed)
 			{
-				calculte();
+				calculate();
 				pressed = true;
 			}		
 		}	
@@ -198,7 +198,7 @@ void RenderCallback()
 				else
 				{
 					std::string negate_revert;
-					for (int i = 1; i < (sizeof(expression) / expression[0]) - 1; i++)
+					for (int i = 1; i < (sizeof(expression) / sizeof(expression[0])) - 1; i++)
 					{
 						negate_revert += expression[i];
 					}
@@ -207,7 +207,7 @@ void RenderCallback()
 			}
 			else if (button == "=")
 			{
-				calculte();
+				calculate();
 			}
 			else
 			{

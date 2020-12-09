@@ -9,14 +9,14 @@ public:
 		_szExpression = pszExpression;
 	}
 	void compute();
-	float getResult()
+	double getResult()
 	{
-		return _flResult;
+		return _Result;
 	}
 private:
 	#define DEBUG 0
 	std::string _szExpression;
-	float _flResult;
+	double _Result;
 	enum OPERATORS
 	{
 		NONE,
@@ -34,7 +34,7 @@ private:
 	};
 	bool getBrackets();
 	void solveBrackets();
-	float computeExpression(std::string pszExpression);
+	double computeExpression(std::string pszExpression);
 	OPERATORS reintepretSymbol(char s)
 	{
 		switch (s)

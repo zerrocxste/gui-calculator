@@ -7,18 +7,18 @@ bool CCalculator::getBrackets()
     size_t pos = _szExpression.find('(');
     if (pos <= _szExpression.size())
     {
-        #if DEBUG
+#if DEBUG
         std::cout << "found brackets! " << std::endl;
-        #endif // DEBUG
+#endif // DEBUG
         bResult = true;
     }  
 
     return bResult;
 }
 
-float CCalculator::computeExpression(std::string pszExpression)
+double CCalculator::computeExpression(std::string pszExpression)
 {
-    float pflResult = 0;
+    double Result = 0;
     std::string ex;
     OPERATORS current_operator;
 
@@ -60,27 +60,27 @@ float CCalculator::computeExpression(std::string pszExpression)
                     u++;
                 }
 
-                float flNumber1 = atof(number1.c_str());
-                float flNumber2 = atof(number2.c_str());
+                double Number1 = atof(number1.c_str());
+                double Number2 = atof(number2.c_str());
 
-                #if DEBUG == 1
+#if DEBUG == 1
                 std::cout << std::endl << "OPERATORS: " << current_operator << std::endl;
                 std::cout << "#1 number (string format): " << number1 << std::endl;
                 std::cout << "#2 number (string format): " << number2 << std::endl << std::endl;
-                #endif // DEBUG
+#endif // DEBUG
 
                 switch (current_operator)
                 {
                 case OPERATORS::MULTIPLICATION:
-                    pflResult = flNumber1 * flNumber2;
+                    Result = Number1 * Number2;
                     break;
                 case OPERATORS::DIVISION:
-                    pflResult = flNumber1 / flNumber2;
+                    Result = Number1 / Number2;
                     break;
                 default:
-                #if DEBUG == 1
+#if DEBUG == 1
                     std::cout << "error #1\n\n";
-                #endif // DEBUG
+#endif // DEBUG
                     break;
                 }
 
@@ -100,7 +100,7 @@ float CCalculator::computeExpression(std::string pszExpression)
 
                 char res[256/*?*/];
                 strcpy(res, ex.c_str());
-                utils.StringReplace(res, replace().c_str(), std::to_string(pflResult).c_str());
+                utils.StringReplace(res, replace().c_str(), std::to_string(Result).c_str());
                 ex = res;
             }
         }
@@ -143,60 +143,58 @@ float CCalculator::computeExpression(std::string pszExpression)
 
             if (!number2.empty() && collect_OK == true)
             {
-                float flNumber1 = atof(number1.c_str());
-                float flNumber2 = atof(number2.c_str());
+                double Number1 = atof(number1.c_str());
+                double Number2 = atof(number2.c_str());
 
-                #if DEBUG == 1
+#if DEBUG == 1
                 std::cout << std::endl << "OPERATORS: " << current_operator << std::endl;
                 if (step <= WAIT_FOR_SECOND_NUMBER) {
                     std::cout << "#1 number (string format): " << number1 << std::endl;
                 }
                 else {
-                    std::cout << "pflResult (float format): " << pflResult << std::endl;
+                    std::cout << "Result (double format): " << pflResult << std::endl;
                 }
                 std::cout << "#2 number (string format): " << number2 << std::endl << std::endl;
-                #endif // DEBUG
+#endif // DEBUG
 
                 switch (current_operator)
                 {
                 case OPERATORS::ADDITION:
                     if (step >= CALC_SECOND_EXPRESSION) {
-                        pflResult += flNumber2;
+                        Result += Number2;
                     }
                     else {
-                        pflResult = flNumber1 + flNumber2;
+                        Result = Number1 + Number2;
                     }
                     number2.clear();
                     collect_OK = false;
                     break;
                 case OPERATORS::SUBSTRACTION:
                     if (step >= CALC_SECOND_EXPRESSION) {
-                        pflResult -= flNumber2;
+                        Result -= Number2;
                     }
                     else {
-                        pflResult = flNumber1 - flNumber2;
+                        Result = Number1 - Number2;
                     }
                     number2.clear();
                     collect_OK = false;
                     break;
                 default:
-                    #if DEBUG == 1
+#if DEBUG == 1
                     std::cout << "error #1\n\n";
-                    #endif // DEBUG
+#endif // DEBUG
                     break;
                 }
             }
         }
     }
 
-    ex = std::to_string(pflResult);   
-
-    return static_cast<float>(atof(ex.c_str()));
+    return Result;
 }
 
 void CCalculator::solveBrackets()
 {
-    float flTemp = 0;
+    double Temp = 0;
     for (int i = _szExpression.size(); i >= 0; i--)
     {
         if (_szExpression[i - 1] == '(')
@@ -207,7 +205,7 @@ void CCalculator::solveBrackets()
             {
                 if (_szExpression[c] == ')')
                 {
-                    flTemp = this->computeExpression(szReplaceData);
+                    Temp = this->computeExpression(szReplaceData);
                     szReplaceData = std::string("(") + szReplaceData + std::string(")");
                     break;
                 }
@@ -216,12 +214,12 @@ void CCalculator::solveBrackets()
             }
             char res[256/*?*/];
             strcpy(res, _szExpression.c_str());
-            utils.StringReplace(res, szReplaceData.c_str(), std::to_string(flTemp).c_str());
+            utils.StringReplace(res, szReplaceData.c_str(), std::to_string(Temp).c_str());
             _szExpression = res;
-            #if DEBUG == 1
-            std::cout << "replace data: " << szReplaceData << " to: " << std::to_string(flTemp).c_str() << std::endl;
+#if DEBUG == 1
+            std::cout << "replace data: " << szReplaceData << " to: " << std::to_string(Temp).c_str() << std::endl;
             std::cout << "edited expression: " << _szExpression << std::endl;
-            #endif //DEBUG
+#endif //DEBUG
         }
     }
 }
@@ -231,5 +229,5 @@ void CCalculator::compute()
     if (this->getBrackets())
         this->solveBrackets();
 
-    _flResult = this->computeExpression(_szExpression);
+    _Result = this->computeExpression(_szExpression);
 }
