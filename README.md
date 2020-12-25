@@ -1,3 +1,3 @@
 # gui-calculator
-Простой калькулятор с кнопками
+сэлф маде калькулятор
 ![alt text](screenshot.png)
