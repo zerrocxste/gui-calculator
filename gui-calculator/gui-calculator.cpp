@@ -144,27 +144,15 @@ void RenderCallback()
 			calculator->setup(std::string(expression));
 			calculator->compute();
 			std::string ex = std::to_string(calculator->getResult());
-			int max_p = 0;
-			bool found = false;
-			for (int i = 0; i < ex.size(); i++)
+
+			for (int i = ex.size() - 1; i >= 0; i--)
 			{
-				if (ex[i] == '.') { found = true; }
-				if (found)
-				{
-					if (ex[i] != '0') max_p = i;
-				}
+				if (ex[i] != '0' && ex[i] != '.')
+					break;
+				else
+					ex.erase(i);
 			}
-			std::string val;
-			if (found)
-			{
-				for (int i = 0; i < max_p + 1; i++)
-				{
-					val += ex[i];
-				}
-				if (val[val.size() - 1] == '.')
-					val.erase(val.size() - 1, 1);
-				ex = val;
-			}
+
 			strcpy(expression, ex.c_str());
 		};
 

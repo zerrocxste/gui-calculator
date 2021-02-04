@@ -32,7 +32,7 @@ private:
 		WAIT_FOR_SECOND_NUMBER,
 		CALC_SECOND_EXPRESSION
 	};
-	bool getBrackets();
+	bool findBrackets();
 	void solveBrackets();
 	double computeExpression(std::string pszExpression);
 	OPERATORS reintepretSymbol(char s)
