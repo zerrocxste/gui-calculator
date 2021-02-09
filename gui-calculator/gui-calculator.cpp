@@ -2,7 +2,7 @@
 #include "resource.h"
 #include "Calculator/calculator.h"
 
-std::unique_ptr<CCalculator>calculator = std::make_unique<CCalculator>();
+std::unique_ptr<CCalculator>g_calculator = std::make_unique<CCalculator>();
 
 const ImVec2 WindowSize{ 300, 400 };
 
@@ -41,17 +41,19 @@ int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int)
 		x, y,
 		WindowSize.x, WindowSize.y,
 		WS_OVERLAPPEDWINDOW,
+		NULL,
+		user_dx_flags::NONE,
 		IDI_ICON1))
 	{
 		InitImGui();
 		DXWFRenderLoop();
 	}
 
+	g_calculator.release();
+
 	DestroyImGui();
 
 	DXWFTerminate();
-
-	calculator.release();
 }
 
 void InitImGui()
@@ -101,19 +103,7 @@ void RenderCallback()
 	float input_width = io.DisplaySize.x / 2.f;
 	input_width += io.DisplaySize.x / 4.f - 13.f;
 	ImGui::PushItemWidth(input_width);
-	if (ImGui::IsRootWindowOrAnyChildFocused() && !ImGui::IsAnyItemActive() && !ImGui::IsMouseClicked(0))
-		ImGui::SetKeyboardFocusHere(0);
-	static bool is_button_clicked = false;
-	auto InputTextCallback = [](ImGuiTextEditCallbackData* data) -> int
-	{
-		if (is_button_clicked)
-		{
-			data->CursorPos = strlen(expression);
-			is_button_clicked = false;
-		}
-		return 0;
-	};
-	ImGui::InputText("##input_block", expression, 256, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_CallbackAlways, InputTextCallback);
+	ImGui::InputText("##input_block", expression, 256, ImGuiInputTextFlags_CharsDecimal);
 	ImGui::PopItemWidth();
 	ImGui::SameLine();
 	if (ImGui::Button("C", ImVec2(io.DisplaySize.x / 4.f - 5.f, 34.f))) {
@@ -141,9 +131,9 @@ void RenderCallback()
 
 		auto calculate = []() -> void
 		{
-			calculator->setup(std::string(expression));
-			calculator->compute();
-			std::string ex = std::to_string(calculator->getResult());
+			g_calculator->setup(std::string(expression));
+			g_calculator->compute();
+			std::string ex = std::to_string(g_calculator->getResult());
 
 			for (int i = ex.size() - 1; i >= 0; i--)
 			{
@@ -169,7 +159,6 @@ void RenderCallback()
 
 		if (ImGui::Button(button, ImVec2((io.DisplaySize.x / 4.f) - 5.6f, button_height)))
 		{
-			is_button_clicked = true;
 			static bool negate = false;
 			if (button == "AC")
 			{
