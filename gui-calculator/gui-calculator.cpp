@@ -137,10 +137,15 @@ void RenderCallback()
 
 			for (int i = ex.size() - 1; i >= 0; i--)
 			{
-				if (ex[i] != '0' && ex[i] != '.')
-					break;
-				else
+				auto is_point = ex[i] == '.';
+				auto is_zero = ex[i] == '0';
+
+				if (is_point || is_zero)
+				{
 					ex.erase(i);
+					if (is_point)
+						break;
+				}
 			}
 
 			strcpy(expression, ex.c_str());
