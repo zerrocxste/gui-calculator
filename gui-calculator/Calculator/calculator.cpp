@@ -47,11 +47,11 @@ double CCalculator::computeExpression(std::string pszExpression)
 				{
 					bool negative_check = false;
 
-					if (ex[u + 1] == '-' && ex[u] == s)
+					if (ex[u] == '-' && number2.empty())
 						negative_check = true;
 
 					if (ex[u] == '+'
-						|| negative_check ? ex[u] == '-' : false
+						|| negative_check ? false : ex[u] == '-'
 						|| ex[u] == '*'
 						|| ex[u] == '/'
 						|| ex[u] == '\0')
