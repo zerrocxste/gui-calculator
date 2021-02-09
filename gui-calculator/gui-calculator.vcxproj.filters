@@ -14,6 +14,9 @@
     <Filter Include="src\Calculator">
       <UniqueIdentifier>{0bc2351f-2ef3-45e8-b84a-68643b3087de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{f9e844db-44f9-4154-a515-7fff0c5afcc8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gui-calculator.cpp">
@@ -81,7 +84,9 @@
     <ClInclude Include="Calculator\calculator.h">
       <Filter>src\Calculator</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="resource.h">
+      <Filter>resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="DXWF\DXWF.lib">
@@ -89,9 +94,13 @@
     </Library>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="gui-calculator.rc" />
+    <ResourceCompile Include="gui-calculator.rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icon.ico" />
+    <Image Include="icon.ico">
+      <Filter>resource</Filter>
+    </Image>
   </ItemGroup>
 </Project>
