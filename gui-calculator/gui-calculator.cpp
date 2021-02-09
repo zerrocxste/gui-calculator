@@ -146,6 +146,8 @@ void RenderCallback()
 					if (is_point)
 						break;
 				}
+				else
+					break;
 			}
 
 			strcpy(expression, ex.c_str());
