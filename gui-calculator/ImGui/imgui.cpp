@@ -5102,6 +5102,9 @@ static bool ImGui::UpdateManualResize(ImGuiWindow* window, const ImVec2& size_au
         }
         if (resize_grip_n == 0 || held || hovered)
             resize_grip_col[resize_grip_n] = GetColorU32(held ? ImGuiCol_ResizeGripActive : hovered ? ImGuiCol_ResizeGripHovered : ImGuiCol_ResizeGrip);
+
+        //window->WindowIsResized = held;
+        
     }
     for (int border_n = 0; border_n < resize_border_count; border_n++)
     {
@@ -5385,6 +5388,12 @@ void ImGui::UpdateWindowParentAndRootLinks(ImGuiWindow* window, ImGuiWindowFlags
         IM_ASSERT(window->RootWindowForNav->ParentWindow != NULL);
         window->RootWindowForNav = window->RootWindowForNav->ParentWindow;
     }
+}
+
+bool ImGui::IsTitleBarHovered()
+{
+    ImRect title_bar_rect = GetCurrentWindow()->TitleBarRect();
+    return IsMouseHoveringRect(title_bar_rect.Min, title_bar_rect.Max);
 }
 
 // Push a new Dear ImGui window to add widgets to.
@@ -5707,6 +5716,7 @@ bool ImGui::Begin(const char* name, bool* p_open, ImGuiWindowFlags flags)
         int border_held = -1;
         ImU32 resize_grip_col[4] = { 0 };
         const int resize_grip_count = g.IO.ConfigWindowsResizeFromEdges ? 2 : 1; // 4
+        
         const float resize_grip_draw_size = (float)(int)ImMax(g.FontSize * 1.35f, window->WindowRounding + 1.0f + g.FontSize * 0.2f);
         if (!window->Collapsed)
             if (UpdateManualResize(window, size_auto_fit, &border_held, resize_grip_count, &resize_grip_col[0]))
@@ -5827,6 +5837,15 @@ bool ImGui::Begin(const char* name, bool* p_open, ImGuiWindowFlags flags)
                 render_decorations_in_parent = true;
         if (render_decorations_in_parent)
             window->DrawList = parent_window->DrawList;
+
+        if (ColorConvertU32ToFloat4(resize_grip_col[0]).x == ColorConvertU32ToFloat4(GetColorU32(ImGuiCol_ResizeGripActive)).x
+            && ColorConvertU32ToFloat4(resize_grip_col[0]).y == ColorConvertU32ToFloat4(GetColorU32(ImGuiCol_ResizeGripActive)).y
+            && ColorConvertU32ToFloat4(resize_grip_col[0]).z == ColorConvertU32ToFloat4(GetColorU32(ImGuiCol_ResizeGripActive)).z
+            && ColorConvertU32ToFloat4(resize_grip_col[0]).w == ColorConvertU32ToFloat4(GetColorU32(ImGuiCol_ResizeGripActive)).w)
+        {
+            //printf("yes\n");
+            window->DC.WindowIsResizing = true;
+        }
 
         // Handle title bar, scrollbar, resize grips and resize borders
         const ImGuiWindow* window_to_highlight = g.NavWindowingTarget ? g.NavWindowingTarget : g.NavWindow;
@@ -6029,6 +6048,8 @@ void ImGui::End()
     if (window->DC.CurrentColumns)
         EndColumns();
     PopClipRect();   // Inner window clip rectangle
+
+    window->DC.WindowIsResizing = false;
 
     // Stop logging
     if (!(window->Flags & ImGuiWindowFlags_ChildWindow))    // FIXME: add more options for scope of logging

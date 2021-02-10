@@ -13,9 +13,6 @@
 #include <d3d9.h>
 #pragma comment (lib, "d3d9.lib")
 
-#include "Include/d3dx9.h"
-#pragma comment (lib, "Lib/x86/d3dx9.lib")
-
 #include "DXWF/DXWF.h"
 #pragma comment (lib, "DXWF/DXWF.lib")
 
