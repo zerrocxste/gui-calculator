@@ -2,7 +2,7 @@
 
 bool CCalculator::FindBrackets()
 {
-	bool bResult = _szExpression.find('(') <= _szExpression.size();
+	bool bResult = _szExpression.find('(') != std::string::npos;
 
 #if DEBUG
 	if (bResult)
