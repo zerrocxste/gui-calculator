@@ -1,6 +1,6 @@
 #include "calculator.h"
 
-bool CCalculator::findBrackets()
+bool CCalculator::FindBrackets()
 {
 	bool bResult = _szExpression.find('(') <= _szExpression.size();
 
@@ -12,22 +12,23 @@ bool CCalculator::findBrackets()
 	return bResult;
 }
 
-double CCalculator::computeExpression(std::string pszExpression)
+double CCalculator::ComputeExpression(std::string pszExpression)
 {
 	double pResult = 0;
 	std::string ex;
 	OPERATORS current_operator;
 	ex = pszExpression;
 
-	const char symbols[] = { '/', '*' };
-	for (auto s : symbols)
+	constexpr const char symbols[] = { '/', '*' };
+
+	for (const auto &symbol : symbols)
 	{
 		for (int i = ex.size(); i >= 0; i--)
 		{
 			std::string number1, number2;
-			if (ex[i] == s)
+			if (ex[i] == symbol)
 			{
-				current_operator = this->reintepretSymbol(s);
+				current_operator = this->ReintepretSymbol(symbol);
 				int b = i - 1;
 				while (true)
 				{
@@ -99,6 +100,7 @@ double CCalculator::computeExpression(std::string pszExpression)
 				strcpy(res, ex.c_str());
 				utils.StringReplace(res, replace().c_str(), std::to_string(pResult).c_str());
 				ex = res;
+				i = ex.size();
 			}
 		}
 	}
@@ -117,12 +119,12 @@ double CCalculator::computeExpression(std::string pszExpression)
 		if (found_addition || found_substraction)
 			neagative_value_counter++;
 
-		if (ex[j] == '+' && neagative_value_counter < 2)
+		if (found_addition && neagative_value_counter < 2)
 		{
 			current_operator = OPERATORS::ADDITION;
 			step++;
 		}
-		else if (ex[j] == '-' && neagative_value_counter < 2)
+		else if (found_substraction && neagative_value_counter < 2)
 		{
 			current_operator = OPERATORS::SUBSTRACTION;
 			step++;
@@ -191,6 +193,7 @@ double CCalculator::computeExpression(std::string pszExpression)
 					break;
 				}
 				neagative_value_counter = 0;
+				j = ex.size();
 			}
 		}
 	}
@@ -198,7 +201,7 @@ double CCalculator::computeExpression(std::string pszExpression)
 	return pResult;
 }
 
-void CCalculator::solveBrackets()
+void CCalculator::SolveBrackets()
 {
 	double temporary = 0;
 	for (int i = _szExpression.size(); i >= 0; i--)
@@ -211,7 +214,7 @@ void CCalculator::solveBrackets()
 			{
 				if (_szExpression[c] == ')')
 				{
-					temporary = this->computeExpression(szReplaceData);
+					temporary = this->ComputeExpression(szReplaceData);
 					szReplaceData = std::string("(") + szReplaceData + std::string(")");
 					break;
 				}
@@ -230,10 +233,10 @@ void CCalculator::solveBrackets()
 	}
 }
 
-void CCalculator::compute()
+void CCalculator::Compute()
 {
-	if (this->findBrackets())
-		this->solveBrackets();
+	if (this->FindBrackets())
+		this->SolveBrackets();
 
-	_Result = this->computeExpression(_szExpression);
+	_Result = this->ComputeExpression(_szExpression);
 }

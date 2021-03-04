@@ -4,14 +4,14 @@
 
 #define IS_POPUP 1
 
+const ImVec2 WindowSize{ 300, 400 }; // 400 615
+
 #if IS_POPUP == 1
 auto wnd_flags = WS_POPUP;
 DWORD dxwf_flags = user_dxwf_flags::ENABLE_WINDOW_ALPHA | user_dxwf_flags::ENABLE_WINDOW_BLUR;
-const ImVec2 WindowSize{ 400, 615 };
 #else
 auto wnd_flags = WS_OVERLAPPEDWINDOW;
 DWORD dxwf_flags = user_dxwf_flags::NONE;
-const ImVec2 WindowSize{ 300, 400 };
 #endif // IS_POPUP
 
 ImVec2 CurrentWindowSize = WindowSize;
@@ -106,7 +106,7 @@ void InitImGui()
 	ImGui_ImplDX9_Init(DXWFGetD3DDevice());
 	ImGui_ImplWin32_Init(DXWFGetHWND());
 
-	ImGui::StyleColorsClassic();
+	ImGui::StyleColorsDark();
 
 	auto &style = ImGui::GetStyle();
 
@@ -189,8 +189,7 @@ void RenderCallback()
 
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5.f);
 
-		float button_height = io.DisplaySize.y / 6.f; //b1g meme
-		button_height += (button_height - ((WindowSize.y - 19.f) / 6.f)) / 5.f;//pizdec =))))
+		float button_height = (ImGui::GetContentRegionAvail().y / 5.f) - 1.5f; //b1g meme
 
 		for (auto button : buttons)
 		{
@@ -202,9 +201,9 @@ void RenderCallback()
 
 			auto calculate = []() -> void
 			{
-				g_calculator->setup(std::string(expression));
-				g_calculator->compute();
-				std::string ex = std::to_string(g_calculator->getResult());
+				g_calculator->Setup(std::string(expression));
+				g_calculator->Compute();
+				std::string ex = std::to_string(g_calculator->GetResult());
 
 				for (int i = ex.size() - 1; i >= 0; i--)
 				{

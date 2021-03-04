@@ -4,12 +4,12 @@ class CCalculator;
 class CCalculator
 {
 public:
-	void setup(const std::string pszExpression)
+	void Setup(const std::string pszExpression)
 	{
 		_szExpression = pszExpression;
 	}
-	void compute();
-	double getResult()
+	void Compute();
+	double GetResult()
 	{
 		return _Result;
 	}
@@ -32,10 +32,10 @@ private:
 		WAIT_FOR_SECOND_NUMBER,
 		CALC_SECOND_EXPRESSION
 	};
-	bool findBrackets();
-	void solveBrackets();
-	double computeExpression(std::string pszExpression);
-	OPERATORS reintepretSymbol(char s)
+	bool FindBrackets();
+	void SolveBrackets();
+	double ComputeExpression(std::string pszExpression);
+	OPERATORS ReintepretSymbol(char s)
 	{
 		switch (s)
 		{
