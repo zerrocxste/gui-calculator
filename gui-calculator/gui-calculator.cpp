@@ -168,7 +168,7 @@ void RenderCallback()
 
 		auto io = ImGui::GetIO();
 
-		static char expression[256] = { 0 };
+		static char expression[4048] = { 0 };
 
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2.f, 2.f));
 		float input_width = io.DisplaySize.x / 2.f;

@@ -46,10 +46,10 @@ double CCalculator::ComputeExpression(std::string pszExpression)
 				int u = i + 1;
 				while (true)
 				{
-					bool negative_check = ex[u] == '-' && number2.empty();
+					auto negative_check_value_check = (ex[u] == '-' && number2.empty()) ? false : ex[u] == '-';
 
 					if (ex[u] == '+'
-						|| negative_check ? false : ex[u] == '-'
+						|| negative_check_value_check
 						|| ex[u] == '*'
 						|| ex[u] == '/'
 						|| ex[u] == '\0')
@@ -96,7 +96,7 @@ double CCalculator::ComputeExpression(std::string pszExpression)
 					return p;
 				};
 
-				char res[256/*?*/];
+				char res[4048/*?*/];
 				strcpy(res, ex.c_str());
 				utils.StringReplace(res, replace().c_str(), std::to_string(pResult).c_str());
 				ex = res;
@@ -193,7 +193,6 @@ double CCalculator::ComputeExpression(std::string pszExpression)
 					break;
 				}
 				neagative_value_counter = 0;
-				j = ex.size();
 			}
 		}
 	}
@@ -221,10 +220,11 @@ void CCalculator::SolveBrackets()
 				szReplaceData += _szExpression[c];
 				c++;
 			}
-			char res[256/*?*/];
+			char res[4048/*?*/];
 			strcpy(res, _szExpression.c_str());
+			std::cout << _szExpression << std::endl;
 			utils.StringReplace(res, szReplaceData.c_str(), std::to_string(temporary).c_str());
-			_szExpression = res;
+			_szExpression = res;	
 #if DEBUG == 1
 			std::cout << "replace data: " << szReplaceData << " to: " << std::to_string(temporary).c_str() << std::endl;
 			std::cout << "edited expression: " << _szExpression << std::endl;
